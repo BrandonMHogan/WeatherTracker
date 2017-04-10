@@ -1,5 +1,6 @@
 package com.brandonhogan.weathertracker.ui.views;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     private static final String TAG = MainActivity.class.getName();
     private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
+    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 2;
 
     @Inject
     MainActivityContract.Presenter presenter;
@@ -50,6 +52,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
                     Log.d(TAG, "onRequestPermissionsResult: Course Location permission declined");
                 }
             }
+            case MY_PERMISSION_ACCESS_FINE_LOCATION: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "onRequestPermissionsResult: Fine Location permission accepted");
+                }
+                else {
+                    Toast.makeText(this, "Permissions needed to retreive forcast.", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onRequestPermissionsResult: Fine Location permission declined");
+                }
+            }
         }
     }
 
@@ -57,9 +68,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     @Override
     protected void onResume() {
         super.onResume();
-        if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+        if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
                     MY_PERMISSION_ACCESS_COURSE_LOCATION );
+        }
+        else if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    MY_PERMISSION_ACCESS_FINE_LOCATION );
         }
         else {
             presenter.onResume();

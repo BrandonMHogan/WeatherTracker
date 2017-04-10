@@ -11,6 +11,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
@@ -22,8 +24,6 @@ public class GPSManager extends Service implements LocationListener {
 
     private Context context;
     private final PublishSubject<Location> locationBus;
-    private LocationManager locationManager;
-
 
     public GPSManager(Context context) {
         locationBus = PublishSubject.create();
@@ -37,38 +37,27 @@ public class GPSManager extends Service implements LocationListener {
         return locationBus;
     }
 
+    @SuppressWarnings({"MissingPermission"})
     public void update() {
 
         try {
-            locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
+            List<String> providers = locationManager.getProviders(true);
 
-            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            for (String provider : providers) {
+                locationManager.requestLocationUpdates(provider, MIN_TIME_UPDATES, MIN_DISTANCE_CHANGE_UPDATES, this);
+                Location location = locationManager.getLastKnownLocation(provider);
 
-            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                Log.d(TAG, "getLocation: GPS is enabled");
-                requestLocationUpdate(LocationManager.GPS_PROVIDER);
+                if (location != null) {
+                    Log.d(TAG, "update: " + provider + " is enabled. Using its location");
+                    updateLocation(location);
+                    break;
+                }
             }
-            else if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                Log.d(TAG, "getLocation: Network is enabled");
-                requestLocationUpdate(LocationManager.NETWORK_PROVIDER);
-            }
-            else {
-                Log.d(TAG, "getLocation: Both GPS and Network disabled. Cannot request location update");
-            }
-
         }
         catch (Exception ex) {
             Log.e(TAG, "getLocation: ", ex);
         }
-    }
-
-    // The permission is checked before referencing the GPS Manager.
-    @SuppressWarnings({"MissingPermission"})
-    private void requestLocationUpdate(String providerInfo) {
-        locationManager.requestLocationUpdates(providerInfo, MIN_TIME_UPDATES, MIN_DISTANCE_CHANGE_UPDATES, this);
-
-        if (locationManager != null)
-            updateLocation(locationManager.getLastKnownLocation(providerInfo));
     }
 
     @Override
@@ -98,6 +87,7 @@ public class GPSManager extends Service implements LocationListener {
     }
 
     private void updateLocation(Location location) {
-        locationBus.onNext(location);
+        if (location != null)
+            locationBus.onNext(location);
     }
 }
