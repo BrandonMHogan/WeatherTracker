@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 
 public interface DarkSkyAPI {
 
-    @GET("{latitude},{longitude}")
+    @GET("{latitude},{longitude}?exclude=minutely")
     Observable<DarkSkyResponse> getForecast(
                                             @Path(value = "latitude", encoded = true) long latitude,
                                             @Path(value = "longitude", encoded = true) long longitude);

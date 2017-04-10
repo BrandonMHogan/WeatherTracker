@@ -1,41 +1,66 @@
 package com.brandonhogan.weathertracker.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 public class DarkSkyResponse {
 
-    private long latitude;
-    private long longitude;
-    private String timeZone;
+    @SerializedName("latitude")
+    @Expose
+    private Double latitude;
+    @SerializedName("longitude")
+    @Expose
+    private Double longitude;
+    @SerializedName("timezone")
+    @Expose
+    private String timezone;
+    @SerializedName("currently")
+    @Expose
+    private DarkSkyCurrentlyResponse currently;
 
-    public DarkSkyResponse() {
-    }
+    @SerializedName("alerts")
+    @Expose
+    private List<DarkSkyAlertResponse> alerts = null;
 
-    public DarkSkyResponse(long latitude, long longitude, String timeZone) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.timeZone = timeZone;
-    }
-
-    public long getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public long getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    public String getTimeZone() {
-        return timeZone;
+    public String getTimezone() {
+        return timezone;
     }
 
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public DarkSkyCurrentlyResponse getCurrently() {
+        return currently;
+    }
+
+    public void setCurrently(DarkSkyCurrentlyResponse currently) {
+        this.currently = currently;
+    }
+
+    public List<DarkSkyAlertResponse> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<DarkSkyAlertResponse> alerts) {
+        this.alerts = alerts;
     }
 }

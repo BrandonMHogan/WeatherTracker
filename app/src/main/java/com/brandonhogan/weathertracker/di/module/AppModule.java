@@ -3,6 +3,8 @@ package com.brandonhogan.weathertracker.di.module;
 import android.app.Application;
 import android.content.Context;
 
+import com.brandonhogan.weathertracker.managers.GPSManager;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -30,4 +32,9 @@ public class AppModule {
         return application.getApplicationContext();
     }
 
+    @Provides
+    @Singleton
+    GPSManager providesManager(Context context) {
+        return new GPSManager(context);
+    }
 }

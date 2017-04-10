@@ -1,9 +1,11 @@
 package com.brandonhogan.weathertracker.ui.presenters;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.brandonhogan.AppController;
 import com.brandonhogan.weathertracker.api.DarkSkyAPI;
+import com.brandonhogan.weathertracker.managers.GPSManager;
 import com.brandonhogan.weathertracker.model.DarkSkyResponse;
 import com.brandonhogan.weathertracker.ui.contracts.MainActivityContract;
 
@@ -11,6 +13,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -22,7 +26,11 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     @Inject
     DarkSkyAPI darkSkyAPI;
 
+    @Inject
+    GPSManager gpsManager;
+
     private MainActivityContract.View view;
+    private Disposable locationDisposible;
 
     @Inject
     public MainActivityPresenter() {
@@ -36,11 +44,38 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void onResume() {
+        if (locationDisposible == null || locationDisposible.isDisposed())
+            updateLocation();
+    }
 
-        long lon = (long)37.8267;
-        long lan = (long)-122.4233;
+    @Override
+    public void onDestroy() {
+        view = null;
+        locationDisposible.dispose();
+    }
 
-        darkSkyAPI.getForecast(lon,lan)
+    @Override
+    public void setView(MainActivityContract.View view) {
+        this.view = view;
+    }
+
+    // Will attach to the subject observer in the gps manager,
+    // and then call an update
+    private void updateLocation() {
+        locationDisposible = gpsManager.locationUpdated()
+                .subscribe(new Consumer<Location>() {
+                    @Override
+                    public void accept(@NonNull Location location) throws Exception {
+                        getForecast(location.getLatitude(), location.getLongitude());
+                    }
+                });
+
+        gpsManager.update();
+    }
+
+    // Makes the call to the forecast API
+    private void getForecast(double latitude, double longitude) {
+        darkSkyAPI.getForecast((long)latitude, (long)longitude)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DarkSkyResponse>() {
@@ -56,18 +91,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 });
     }
 
-    @Override
-    public void onDestroy() {
-        view = null;
-    }
-
-    @Override
-    public void setView(MainActivityContract.View view) {
-        this.view = view;
-    }
-
     private void onForecastLoad(DarkSkyResponse response) {
         Log.d(TAG, "onLoad: ");
+
     }
 
     private void onForecastError(Throwable e) {

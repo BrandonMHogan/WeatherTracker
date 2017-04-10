@@ -67,8 +67,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override
@@ -76,9 +77,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         switch (item.getItemId()) {
             case R.id.navigation_home:
                 return true;
-            case R.id.navigation_dashboard:
-                return true;
-            case R.id.navigation_notifications:
+            case R.id.navigation_alerts:
                 return true;
         }
         return false;

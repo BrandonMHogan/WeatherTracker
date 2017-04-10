@@ -8,7 +8,6 @@ import com.brandonhogan.weathertracker.di.component.DaggerViewComponent;
 import com.brandonhogan.weathertracker.di.component.ViewComponent;
 import com.brandonhogan.weathertracker.di.module.AppModule;
 import com.brandonhogan.weathertracker.di.module.DarkSkyModule;
-import com.brandonhogan.weathertracker.di.module.ManagerModule;
 import com.brandonhogan.weathertracker.di.module.NetworkModule;
 import com.brandonhogan.weathertracker.di.module.PresenterModule;
 
@@ -23,7 +22,6 @@ public class AppController extends Application {
                 .darkSkyModule(new DarkSkyModule())
                 .appModule(new AppModule(this))
                 .networkModule(new NetworkModule())
-                .managerModule(new ManagerModule())
                 .build();
 
         viewComponent = DaggerViewComponent.builder()

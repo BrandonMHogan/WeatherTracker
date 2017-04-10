@@ -10,6 +10,5 @@ import dagger.Component;
 @Singleton
 @Component(modules = PresenterModule.class)
 public interface ViewComponent {
-
     void inject(MainActivity activity);
 }

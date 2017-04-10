@@ -11,17 +11,8 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.brandonhogan.AppController;
-
-import javax.inject.Inject;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-
-/**
- * Created by Brandon on 4/10/2017.
- * Description :
- */
 
 public class GPSManager extends Service implements LocationListener {
 
@@ -29,17 +20,15 @@ public class GPSManager extends Service implements LocationListener {
     private static final long MIN_TIME_UPDATES = 1000 * 60; // 1 min intervals
     private static final long MIN_DISTANCE_CHANGE_UPDATES = 10; // 10 meters
 
-    @Inject
-    Context context;
-
+    private Context context;
     private final PublishSubject<Location> locationBus;
     private LocationManager locationManager;
 
 
-    public GPSManager() {
-        AppController.getMainComponent().inject(this);
+    public GPSManager(Context context) {
         locationBus = PublishSubject.create();
-        init();
+        this.context = context;
+        update();
     }
 
     // When the location updates, the subject's onNext is called, which will trigger all
@@ -48,7 +37,7 @@ public class GPSManager extends Service implements LocationListener {
         return locationBus;
     }
 
-    private void init() {
+    public void update() {
 
         try {
             locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
