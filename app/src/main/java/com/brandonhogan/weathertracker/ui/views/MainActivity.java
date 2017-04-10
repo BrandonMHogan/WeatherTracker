@@ -9,57 +9,32 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.brandonhogan.AppController;
 import com.brandonhogan.weathertracker.R;
-import com.brandonhogan.weathertracker.api.DarkSkyAPI;
-import com.brandonhogan.weathertracker.model.DarkSkyResponse;
 import com.brandonhogan.weathertracker.ui.contracts.MainActivityContract;
-import com.brandonhogan.weathertracker.ui.presenters.MainActivityPresenter;
 
 import javax.inject.Inject;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
-public class MainActivity extends AppCompatActivity implements MainActivityContract.View {
+public class MainActivity extends AppCompatActivity implements MainActivityContract.View, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
 
+    @Inject
     MainActivityContract.Presenter presenter;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    return true;
-                case R.id.navigation_dashboard:
-                    return true;
-                case R.id.navigation_notifications:
-                    return true;
-            }
-            return false;
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new MainActivityPresenter();
+        AppController.getViewComponent().inject(this);
         presenter.setView(this);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setOnNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -76,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
                 }
             }
         }
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     // Check to make sure that you have the correct permissions on start, since the app needs your location to work correctly
@@ -95,5 +69,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_home:
+                return true;
+            case R.id.navigation_dashboard:
+                return true;
+            case R.id.navigation_notifications:
+                return true;
+        }
+        return false;
     }
 }

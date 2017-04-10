@@ -8,12 +8,13 @@ import com.brandonhogan.weathertracker.model.DarkSkyResponse;
 import com.brandonhogan.weathertracker.ui.contracts.MainActivityContract;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-
+@Singleton
 public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private static final String TAG = MainActivityPresenter.class.getName();
@@ -23,8 +24,9 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     private MainActivityContract.View view;
 
+    @Inject
     public MainActivityPresenter() {
-        AppController.getComponent().inject(this);
+        AppController.getMainComponent().inject(this);
     }
 
     @Override
