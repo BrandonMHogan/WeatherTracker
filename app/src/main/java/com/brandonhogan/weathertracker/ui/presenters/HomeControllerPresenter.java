@@ -25,7 +25,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     private static final String TAG = HomeControllerPresenter.class.getName();
 
     private static final String STATE_BUNDLE = "homeControllerState";
-    private static final String PARCABLE_RESPONSE = "parcableResponse";
+    private static final String PARCELABLE_RESPONSE = "parcelableResponse";
 
     @Inject
     DarkSkyAPI darkSkyAPI;
@@ -34,7 +34,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     GPSManager gpsManager;
 
     private HomeControllerContract.View view;
-    private Disposable locationDisposible;
+    private Disposable locationDisposable;
     private DarkSkyResponse response;
 
     @Inject
@@ -44,14 +44,16 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
 
     @Override
     public void onAttach() {
-        if (locationDisposible == null || locationDisposible.isDisposed())
+        if (locationDisposable == null || locationDisposable.isDisposed())
             updateLocation();
     }
 
     @Override
     public void onDetach() {
         view = null;
-        locationDisposible.dispose();
+
+        if(locationDisposable != null)
+        locationDisposable.dispose();
     }
 
     @Override
@@ -67,7 +69,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     @Override
     public Bundle getState() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(PARCABLE_RESPONSE, response);
+        bundle.putParcelable(PARCELABLE_RESPONSE, response);
         return bundle;
     }
 
@@ -83,7 +85,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
         try {
             setView(view);
             Bundle bundle = state.getBundle(STATE_BUNDLE);
-            DarkSkyResponse stateResponse = bundle.getParcelable(PARCABLE_RESPONSE);
+            DarkSkyResponse stateResponse = bundle.getParcelable(PARCELABLE_RESPONSE);
 
             onForecastLoad(stateResponse);
         }
@@ -95,7 +97,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     // Will attach to the subject observer in the gps manager,
     // and then call an update
     private void updateLocation() {
-        locationDisposible = gpsManager.locationUpdated()
+        locationDisposable = gpsManager.locationUpdated()
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(@NonNull Location location) throws Exception {

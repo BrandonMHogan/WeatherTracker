@@ -1,12 +1,9 @@
 package com.brandonhogan.weathertracker.ui.views;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -29,8 +26,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View, OnTabSelectListener {
 
     private static final String TAG = MainActivity.class.getName();
-    private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
-    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 2;
 
     @Inject
     MainActivityContract.Presenter presenter;
@@ -60,16 +55,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         bottomBar.setOnTabSelectListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (!router.handleBack()) {
-            super.onBackPressed();
-        }
-    }
 
+    private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
+    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 2;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
+        Log.d(TAG, "onRequestPermissionsResult: ");
         switch (requestCode) {
             case MY_PERMISSION_ACCESS_COURSE_LOCATION: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -92,21 +83,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         }
     }
 
-    // Check to make sure that you have the correct permissions on start, since the app needs your location to work correctly
+    @Override
+    public void onBackPressed() {
+        if (!router.handleBack()) {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if ( ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(this, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
-                    MY_PERMISSION_ACCESS_COURSE_LOCATION );
-        }
-        else if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions(this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    MY_PERMISSION_ACCESS_FINE_LOCATION );
-        }
-        else {
-            presenter.onAttach();
-        }
     }
 
     @Override

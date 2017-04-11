@@ -1,8 +1,11 @@
 package com.brandonhogan.weathertracker.ui.views;
 
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +30,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeController extends Controller implements HomeControllerContract.View {
+
+    private static final String TAG = HomeController.class.getName();
+    private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
+    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 2;
 
     @Inject
     HomeControllerContract.Presenter presenter;
@@ -97,10 +104,39 @@ public class HomeController extends Controller implements HomeControllerContract
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: ");
+        switch (requestCode) {
+            case MY_PERMISSION_ACCESS_COURSE_LOCATION: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "onRequestPermissionsResult: Course Location permission accepted");
+                    presenter.onAttach();
+                }
+                else {
+                    Toast.makeText(getActivity(), "Permissions needed to retreive forcast.", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onRequestPermissionsResult: Course Location permission declined");
+                    permissionDenied();
+                }
+            }
+        }
+    }
+
+    // Check to make sure that you have the correct permissions on start, since the app needs your location to work correctly
+    @Override
     protected void onAttach(@NonNull View view) {
         super.onAttach(view);
         presenter.setView(this);
-        presenter.onAttach();
+
+        if (getActivity() == null)
+            return;
+
+        if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+            this.requestPermissions(new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                    MY_PERMISSION_ACCESS_COURSE_LOCATION);
+        }
+        else {
+            presenter.onAttach();
+        }
     }
 
     @Override
@@ -165,5 +201,10 @@ public class HomeController extends Controller implements HomeControllerContract
     private void showToast(int msg) {
         toast.setText(msg);
         toast.show();
+    }
+
+    private void permissionDenied() {
+        loadingText.setText(R.string.loading_dialog_denied);
+        progressBar.setVisibility(View.GONE);
     }
 }
