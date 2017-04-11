@@ -42,6 +42,9 @@ public class HomeController extends Controller implements HomeControllerContract
     @Bind(R.id.temperature_apparent)
     TextView temperatureApparentText;
 
+    @Bind(R.id.precipitation)
+    TextView precipitationText;
+
     @Bind(R.id.iconImageView)
     ImageView iconImage;
 
@@ -99,6 +102,8 @@ public class HomeController extends Controller implements HomeControllerContract
             temperatureText.setText(getActivity().getString(R.string.temperature, currently.getTemperature().toString()));
             temperatureApparentText.setText(getActivity().getString(R.string.temperature_apparent, currently.getApparentTemperature().toString()));
 
+            //String percentage = Double.toString(currently.getPrecipProbability() * 100);
+            precipitationText.setText(getActivity().getString(R.string.precipitation, Double.toString(currently.getPrecipProbability() * 100)));
 
             switch (response.getCurrently().getIcon().toLowerCase()) {
                 case "clear-day":
