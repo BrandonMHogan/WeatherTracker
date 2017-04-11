@@ -69,6 +69,15 @@ public class DarkSkyResponse implements Parcelable {
         this.alerts = alerts;
     }
 
+    public String getLocation() {
+        int index = timezone.indexOf("/");
+
+        if(timezone.length() > index + 1)
+            return timezone.substring(index + 1);
+
+        return timezone;
+    }
+
     protected DarkSkyResponse(Parcel in) {
         latitude = in.readByte() == 0x00 ? null : in.readDouble();
         longitude = in.readByte() == 0x00 ? null : in.readDouble();

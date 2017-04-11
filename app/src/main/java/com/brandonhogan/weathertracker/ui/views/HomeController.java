@@ -125,6 +125,10 @@ public class HomeController extends Controller implements HomeControllerContract
 
     @Override
     public void onLoad(DarkSkyResponse response) {
+
+        if(getActivity() == null)
+            return;
+
         if (response.getCurrently() != null) {
 
             CurrentlyResponse currently = response.getCurrently();
