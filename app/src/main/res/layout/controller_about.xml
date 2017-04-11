@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <TextView
         android:id="@+id/title"
-        android:layout_width="253dp"
-        android:layout_height="121dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="35dp"
+        android:layout_width="@dimen/about_title_width"
+        android:layout_height="@dimen/about_title_height"
+        android:layout_marginLeft="@dimen/about_title_margin_side"
+        android:layout_marginRight="@dimen/about_title_margin_side"
+        android:layout_marginTop="@dimen/about_title_margin_top"
         android:text="@string/about_title"
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -22,28 +20,16 @@
         app:layout_constraintHorizontal_bias="0.504" />
 
     <ImageView
-        android:id="@+id/speakfeel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:tint="@android:color/black"
-        app:srcCompat="@drawable/speakfeel_logo"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/darksky" />
-
-    <ImageView
         android:id="@+id/darksky"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_width="@dimen/about_image_width"
+        android:layout_height="@dimen/about_image_height"
+        android:layout_marginLeft="@dimen/about_image_margin_side"
+        android:layout_marginRight="@dimen/about_image_margin_side"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/poweredby_oneline"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="50dp" />
+        android:layout_marginBottom="@dimen/about_image_margin_bottom"
+        android:contentDescription="@null"/>
 
 </android.support.constraint.ConstraintLayout>
