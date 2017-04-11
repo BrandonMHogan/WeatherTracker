@@ -99,6 +99,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
                 .subscribe(new Consumer<Location>() {
                     @Override
                     public void accept(@NonNull Location location) throws Exception {
+                        view.onLocationFound();
                         getForecast(location.getLatitude(), location.getLongitude());
                     }
                 });

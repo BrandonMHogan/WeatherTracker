@@ -240,6 +240,15 @@ public class CurrentlyResponse implements Parcelable {
         return ((int) (windSpeed * 2.236936));
     }
 
+    public double getPrecipProbabilityPercent() {
+        return ((double) (precipProbability * 100));
+    }
+
+    public double getHumidityPercent() {
+        return (humidity * 100);
+    }
+
+
     protected CurrentlyResponse(Parcel in) {
         time = in.readByte() == 0x00 ? null : in.readInt();
         summary = in.readString();

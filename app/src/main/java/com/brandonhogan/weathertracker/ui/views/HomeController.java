@@ -34,6 +34,9 @@ public class HomeController extends Controller implements HomeControllerContract
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
+    @Bind(R.id.loading)
+    TextView loadingText;
+
     @Bind(R.id.summary)
     TextView summaryText;
 
@@ -124,10 +127,17 @@ public class HomeController extends Controller implements HomeControllerContract
     }
 
     @Override
+    public void onLocationFound() {
+        loadingText.setText("");
+    }
+
+    @Override
     public void onLoad(DarkSkyResponse response) {
 
         if(getActivity() == null)
             return;
+
+        getActivity().setTitle(response.getLocation());
 
         if (response.getCurrently() != null) {
 
@@ -136,8 +146,8 @@ public class HomeController extends Controller implements HomeControllerContract
             summaryText.setText(currently.getSummary());
             temperatureText.setText(getActivity().getString(R.string.temperature, currently.getTemperature().toString()));
             temperatureApparentText.setText(getActivity().getString(R.string.temperature_apparent, currently.getApparentTemperature().toString()));
-            precipitationText.setText(getActivity().getString(R.string.precipitation, Double.toString(currently.getPrecipProbability() * 100)));
-            humidityText.setText(getActivity().getString(R.string.humidity, Double.toString(currently.getHumidity() * 100)));
+            precipitationText.setText(getActivity().getString(R.string.precipitation, Double.toString(currently.getPrecipProbabilityPercent())));
+            humidityText.setText(getActivity().getString(R.string.humidity, Double.toString(currently.getHumidityPercent())));
             windSpeedText.setText(getActivity().getString(R.string.wind_speed, Integer.toString(currently.getWindSpeedMPH())));
 
             iconImage.setImageResource(currently.getIconImage());

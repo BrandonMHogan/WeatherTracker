@@ -5,7 +5,8 @@
     <string name="title_about">About</string>
     <string name="title_refresh">Refresh</string>
 
-    <string name="loading_dialog">Looking up your location weather forecast. One moment please.</string>
+
+    <string name="loading_dialog">Looking up your location. Make sure network or GPS is turned on.</string>
     <string name="temperature">Temperature : %s°C</string>
     <string name="temperature_apparent">Feels Like : %s°C</string>
     <string name="precipitation">Precipitation : %s%%</string>

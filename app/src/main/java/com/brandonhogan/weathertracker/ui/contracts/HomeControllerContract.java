@@ -14,6 +14,7 @@ public interface HomeControllerContract {
     interface View {
         void onLoad(DarkSkyResponse response);
         void onLoadFail();
+        void onLocationFound();
     }
 
     interface Presenter extends PresenterBaseContract {

@@ -70,12 +70,15 @@ public class DarkSkyResponse implements Parcelable {
     }
 
     public String getLocation() {
-        int index = timezone.indexOf("/");
+        String location = timezone;
+        location = location.replaceAll("_", " ");
 
-        if(timezone.length() > index + 1)
-            return timezone.substring(index + 1);
+        int index = location.indexOf("/");
 
-        return timezone;
+        if(location.length() > index + 1)
+            return location.substring(index + 1);
+
+        return location;
     }
 
     protected DarkSkyResponse(Parcel in) {
