@@ -128,7 +128,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     private void onForecastLoad(DarkSkyResponse response) {
         this.response = response;
 
-        if (response != null)
+        if (response != null && view != null)
             view.onLoad(response);
     }
 
@@ -136,5 +136,4 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
         Log.e(TAG, "onForecastError: ", e);
         view.onLoadFail();
     }
-
 }

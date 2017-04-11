@@ -14,6 +14,10 @@ public class AboutController extends Controller {
     @Override
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_about, container, false);
+
+        if (getActivity() != null)
+            getActivity().setTitle(R.string.app_name);
+
         return view;
     }
 
