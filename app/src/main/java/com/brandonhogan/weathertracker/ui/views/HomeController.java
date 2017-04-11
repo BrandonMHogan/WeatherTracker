@@ -1,8 +1,8 @@
 package com.brandonhogan.weathertracker.ui.views;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,13 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluelinelabs.conductor.Controller;
 import com.brandonhogan.AppController;
 import com.brandonhogan.weathertracker.R;
-import com.brandonhogan.weathertracker.model.DarkSkyCurrentlyResponse;
+import com.brandonhogan.weathertracker.model.CurrentlyResponse;
 import com.brandonhogan.weathertracker.model.DarkSkyResponse;
 import com.brandonhogan.weathertracker.ui.contracts.HomeControllerContract;
 
@@ -30,8 +31,8 @@ public class HomeController extends Controller implements HomeControllerContract
     @Inject
     HomeControllerContract.Presenter presenter;
 
-    @Bind(R.id.loading_layout)
-    ConstraintLayout loadingLayout;
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
 
     @Bind(R.id.summary)
     TextView summaryText;
@@ -48,12 +49,18 @@ public class HomeController extends Controller implements HomeControllerContract
     @Bind(R.id.iconImageView)
     ImageView iconImage;
 
+    private Toast toast;
+
+    @SuppressLint("ShowToast")
+    @NonNull
     protected View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container) {
         View view = inflater.inflate(R.layout.controller_home, container, false);
 
         ButterKnife.bind(this, view);
         AppController.getViewComponent().inject(this);
         setHasOptionsMenu(true);
+
+        toast = Toast.makeText(getActivity(), null, Toast.LENGTH_SHORT);
 
         return view;
     }
@@ -73,6 +80,7 @@ public class HomeController extends Controller implements HomeControllerContract
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
+                progressBar.setVisibility(View.VISIBLE);
                 presenter.onRefresh();
                 return true;
         }
@@ -93,52 +101,46 @@ public class HomeController extends Controller implements HomeControllerContract
     }
 
     @Override
+    protected void onSaveViewState(@NonNull View view, @NonNull Bundle outState) {
+        outState.putBundle(presenter.getStateKey(), presenter.getState());
+        super.onSaveViewState(view, outState);
+    }
+
+    @Override
+    protected void onRestoreViewState(@NonNull View view, @NonNull Bundle savedViewState) {
+
+        if(!savedViewState.isEmpty()) {
+            presenter.setView(this);
+            presenter.setState(savedViewState);
+        }
+
+        super.onRestoreViewState(view, savedViewState);
+    }
+
+    @Override
     public void onLoad(DarkSkyResponse response) {
         if (response.getCurrently() != null) {
 
-            DarkSkyCurrentlyResponse currently = response.getCurrently();
+            CurrentlyResponse currently = response.getCurrently();
 
             summaryText.setText(currently.getSummary());
             temperatureText.setText(getActivity().getString(R.string.temperature, currently.getTemperature().toString()));
             temperatureApparentText.setText(getActivity().getString(R.string.temperature_apparent, currently.getApparentTemperature().toString()));
-
-            //String percentage = Double.toString(currently.getPrecipProbability() * 100);
             precipitationText.setText(getActivity().getString(R.string.precipitation, Double.toString(currently.getPrecipProbability() * 100)));
-
-            switch (response.getCurrently().getIcon().toLowerCase()) {
-                case "clear-day":
-                    iconImage.setImageResource(R.drawable.ic_sun);
-                    break;
-                case "clear-night":
-                    iconImage.setImageResource(R.drawable.ic_moon);
-                    break;
-                case "partly-cloudy-day":
-                    iconImage.setImageResource(R.drawable.ic_cloud_sun);
-                    break;
-                case "partly-cloudy-night":
-                    iconImage.setImageResource(R.drawable.ic_cloud_moon);
-                    break;
-                case "cloudy":
-                    iconImage.setImageResource(R.drawable.ic_cloud);
-                    break;
-                case "rain":
-                    iconImage.setImageResource(R.drawable.ic_cloud_drizzle_alt);
-                    break;
-                case "sleet":
-                    iconImage.setImageResource(R.drawable.ic_cloud_hail_alt);
-                    break;
-                case "snow":
-                    iconImage.setImageResource(R.drawable.ic_cloud_snow);
-                    break;
-                case "wind":
-                    iconImage.setImageResource(R.drawable.ic_wind);
-                    break;
-                case "fog":
-                    iconImage.setImageResource(R.drawable.ic_cloud_fog);
-            }
+            iconImage.setImageResource(currently.getIconImage());
 
         }
-        loadingLayout.setVisibility(View.GONE);
-        Toast.makeText(getActivity(), "Forecast Refreshed", Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.GONE);
+        showToast(R.string.forecast_loaded);
+    }
+
+    @Override
+    public void onLoadFail() {
+        showToast(R.string.forecast_failed);
+    }
+
+    private void showToast(int msg) {
+        toast.setText(msg);
+        toast.show();
     }
 }

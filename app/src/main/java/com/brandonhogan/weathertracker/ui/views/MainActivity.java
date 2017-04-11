@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
             case R.id.navigation_home:
                 router.setRoot(RouterTransaction.with(new HomeController()));
                 return true;
-            case R.id.navigation_alerts:
-                router.setRoot(RouterTransaction.with(new AlertController()));
+            case R.id.navigation_about:
+                router.setRoot(RouterTransaction.with(new AboutController()));
                 return true;
         }
         return false;

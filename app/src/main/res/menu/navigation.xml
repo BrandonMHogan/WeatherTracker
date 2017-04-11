@@ -7,7 +7,7 @@
         android:title="@string/title_current" />
 
     <item
-        android:id="@+id/navigation_alerts"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_alerts" />
+        android:id="@+id/navigation_about"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:title="@string/title_about" />
 </menu>

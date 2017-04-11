@@ -1,6 +1,7 @@
 package com.brandonhogan.weathertracker.ui.presenters;
 
 import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.brandonhogan.AppController;
@@ -23,6 +24,9 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
 
     private static final String TAG = HomeControllerPresenter.class.getName();
 
+    private static final String STATE_BUNDLE = "homeControllerState";
+    private static final String PARCABLE_RESPONSE = "parcableResponse";
+
     @Inject
     DarkSkyAPI darkSkyAPI;
 
@@ -31,6 +35,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
 
     private HomeControllerContract.View view;
     private Disposable locationDisposible;
+    private DarkSkyResponse response;
 
     @Inject
     public HomeControllerPresenter() {
@@ -57,6 +62,34 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     @Override
     public void onRefresh() {
         gpsManager.update();
+    }
+
+    @Override
+    public Bundle getState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(PARCABLE_RESPONSE, response);
+        return bundle;
+    }
+
+    @Override
+    public String getStateKey() {
+        return STATE_BUNDLE;
+    }
+
+    @Override
+    public void setState(Bundle state) {
+        Log.d(TAG, "setState: State is being restored...");
+
+        try {
+            setView(view);
+            Bundle bundle = state.getBundle(STATE_BUNDLE);
+            DarkSkyResponse stateResponse = bundle.getParcelable(PARCABLE_RESPONSE);
+
+            onForecastLoad(stateResponse);
+        }
+        catch (Exception ex) {
+            Log.e(TAG, "setState: State failed to restore", ex);
+        }
     }
 
     // Will attach to the subject observer in the gps manager,
@@ -92,11 +125,15 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
     }
 
     private void onForecastLoad(DarkSkyResponse response) {
-        view.onLoad(response);
+        this.response = response;
+
+        if (response != null)
+            view.onLoad(response);
     }
 
     private void onForecastError(Throwable e) {
-        Log.d(TAG, "onForecastError: ", e);
+        Log.e(TAG, "onForecastError: ", e);
+        view.onLoadFail();
     }
 
 }

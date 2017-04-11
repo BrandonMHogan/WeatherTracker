@@ -2,10 +2,16 @@
     <string name="app_name">Weather Tracker</string>
     <string name="title_current">Current</string>
     <string name="title_alerts">Alerts</string>
+    <string name="title_about">About</string>
     <string name="title_refresh">Refresh</string>
 
     <string name="loading_dialog">Looking up your location weather forecast. One moment please.</string>
     <string name="temperature">Temperature : %s°C</string>
     <string name="temperature_apparent">Feels Like : %s°C</string>
     <string name="precipitation">Precipitation : %s%%</string>
+
+
+
+    <string name="forecast_loaded">Forecast has been updated</string>
+    <string name="forecast_failed">Failed to retrieve forecast. Please try again later.</string>
 </resources>
