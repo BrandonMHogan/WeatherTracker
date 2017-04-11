@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Weather Tracker</string>
-    <string name="title_home">Home</string>
+    <string name="title_current">Current</string>
     <string name="title_alerts">Alerts</string>
+
+    <string name="loading_dialog">Looking up your location weather forecast. One moment please.</string>
+
+    <string name="temperature">Temperature : %d</string>
+    <string name="temperature_apparent">Feels Like : %d</string>
 </resources>

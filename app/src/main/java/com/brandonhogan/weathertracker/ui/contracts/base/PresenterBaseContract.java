@@ -6,7 +6,6 @@ package com.brandonhogan.weathertracker.ui.contracts.base;
  */
 
 public interface PresenterBaseContract {
-    void onResume();
-    void onPause();
-    void onDestroy();
+    void onAttach();
+    void onDetach();
 }

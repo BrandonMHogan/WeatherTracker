@@ -10,13 +10,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bluelinelabs.conductor.Conductor;
+import com.bluelinelabs.conductor.Router;
+import com.bluelinelabs.conductor.RouterTransaction;
 import com.brandonhogan.AppController;
 import com.brandonhogan.weathertracker.R;
 import com.brandonhogan.weathertracker.ui.contracts.MainActivityContract;
 
 import javax.inject.Inject;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View, BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -27,16 +34,35 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     @Inject
     MainActivityContract.Presenter presenter;
 
+    @Bind(R.id.controller_container)
+    ViewGroup container;
+
+    private Router router;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         AppController.getViewComponent().inject(this);
         presenter.setView(this);
 
+        router = Conductor.attachRouter(this, container, savedInstanceState);
+        if (!router.hasRootController()) {
+            router.setRoot(RouterTransaction.with(new HomeController()));
+        }
+
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!router.handleBack()) {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -77,22 +103,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
                     MY_PERMISSION_ACCESS_FINE_LOCATION );
         }
         else {
-            presenter.onResume();
+            presenter.onAttach();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
+        presenter.onDetach();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.navigation_home:
+                router.setRoot(RouterTransaction.with(new HomeController()));
                 return true;
             case R.id.navigation_alerts:
+                router.setRoot(RouterTransaction.with(new AlertController()));
                 return true;
         }
         return false;
