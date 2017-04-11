@@ -54,6 +54,11 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
         this.view = view;
     }
 
+    @Override
+    public void onRefresh() {
+        gpsManager.update();
+    }
+
     // Will attach to the subject observer in the gps manager,
     // and then call an update
     private void updateLocation() {

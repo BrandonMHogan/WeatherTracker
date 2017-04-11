@@ -2,15 +2,21 @@ package com.brandonhogan.weathertracker.ui.views;
 
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bluelinelabs.conductor.Controller;
 import com.brandonhogan.AppController;
 import com.brandonhogan.weathertracker.R;
+import com.brandonhogan.weathertracker.model.DarkSkyCurrentlyResponse;
 import com.brandonhogan.weathertracker.model.DarkSkyResponse;
 import com.brandonhogan.weathertracker.ui.contracts.HomeControllerContract;
 
@@ -44,8 +50,30 @@ public class HomeController extends Controller implements HomeControllerContract
 
         ButterKnife.bind(this, view);
         AppController.getViewComponent().inject(this);
+        setHasOptionsMenu(true);
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.appbar_menu, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                presenter.onRefresh();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -64,9 +92,12 @@ public class HomeController extends Controller implements HomeControllerContract
     @Override
     public void onLoad(DarkSkyResponse response) {
         if (response.getCurrently() != null) {
-            summaryText.setText(response.getCurrently().getSummary());
-            temperatureText.setText(getActivity().getString(R.string.temperature, response.getCurrently().getTemperature()));
-            temperatureApparentText.setText(getActivity().getString(R.string.temperature_apparent, response.getCurrently().getApparentTemperature()));
+
+            DarkSkyCurrentlyResponse currently = response.getCurrently();
+
+            summaryText.setText(currently.getSummary());
+            temperatureText.setText(getActivity().getString(R.string.temperature, currently.getTemperature().toString()));
+            temperatureApparentText.setText(getActivity().getString(R.string.temperature_apparent, currently.getApparentTemperature().toString()));
 
 
             switch (response.getCurrently().getIcon().toLowerCase()) {
@@ -103,5 +134,6 @@ public class HomeController extends Controller implements HomeControllerContract
 
         }
         loadingLayout.setVisibility(View.GONE);
+        Toast.makeText(getActivity(), "Forecast Refreshed", Toast.LENGTH_SHORT).show();
     }
 }

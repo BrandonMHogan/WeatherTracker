@@ -15,5 +15,6 @@ public interface HomeControllerContract {
 
     interface Presenter extends PresenterBaseContract {
         void setView(HomeControllerContract.View view);
+        void onRefresh();
     }
 }
