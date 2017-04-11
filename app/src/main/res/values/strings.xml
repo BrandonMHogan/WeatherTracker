@@ -9,6 +9,8 @@
     <string name="temperature">Temperature : %s°C</string>
     <string name="temperature_apparent">Feels Like : %s°C</string>
     <string name="precipitation">Precipitation : %s%%</string>
+    <string name="humidity">Humidity : %s%%</string>
+    <string name="wind_speed">Wind Speed : %s MPH</string>
 
 
 

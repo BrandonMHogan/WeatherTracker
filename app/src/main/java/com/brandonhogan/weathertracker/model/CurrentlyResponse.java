@@ -236,6 +236,10 @@ public class CurrentlyResponse implements Parcelable {
         }
     }
 
+    public int getWindSpeedMPH() {
+        return ((int) (windSpeed * 2.236936));
+    }
+
     protected CurrentlyResponse(Parcel in) {
         time = in.readByte() == 0x00 ? null : in.readInt();
         summary = in.readString();

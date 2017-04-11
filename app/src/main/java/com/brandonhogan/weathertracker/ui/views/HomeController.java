@@ -46,6 +46,12 @@ public class HomeController extends Controller implements HomeControllerContract
     @Bind(R.id.precipitation)
     TextView precipitationText;
 
+    @Bind(R.id.humidity)
+    TextView humidityText;
+
+    @Bind(R.id.windSpeed)
+    TextView windSpeedText;
+
     @Bind(R.id.iconImageView)
     ImageView iconImage;
 
@@ -127,6 +133,9 @@ public class HomeController extends Controller implements HomeControllerContract
             temperatureText.setText(getActivity().getString(R.string.temperature, currently.getTemperature().toString()));
             temperatureApparentText.setText(getActivity().getString(R.string.temperature_apparent, currently.getApparentTemperature().toString()));
             precipitationText.setText(getActivity().getString(R.string.precipitation, Double.toString(currently.getPrecipProbability() * 100)));
+            humidityText.setText(getActivity().getString(R.string.humidity, Double.toString(currently.getHumidity() * 100)));
+            windSpeedText.setText(getActivity().getString(R.string.wind_speed, Integer.toString(currently.getWindSpeedMPH())));
+
             iconImage.setImageResource(currently.getIconImage());
 
         }
