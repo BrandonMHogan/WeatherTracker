@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/navigation_home"
+        icon="@drawable/ic_home_black_24dp"
+        title="@string/title_current" />
+    <tab
+        id="@+id/navigation_about"
+        icon="@drawable/ic_info_outline_black_24dp"
+        title="@string/title_about" />
+</tabs>

@@ -9,17 +9,18 @@
     android:orientation="vertical"
     tools:context="com.brandonhogan.weathertracker.ui.views.MainActivity">
 
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        app:bb_tabXmlResource="@xml/bottombar_tabs"
+        app:bb_tabletMode="true" />
+
     <com.bluelinelabs.conductor.ChangeHandlerFrameLayout
         android:id="@+id/controller_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <com.roughike.bottombar.BottomBar
-        android:id="@+id/bottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottombar_tabs" />
 
 </RelativeLayout>

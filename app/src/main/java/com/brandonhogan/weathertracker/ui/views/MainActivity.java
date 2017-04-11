@@ -3,13 +3,12 @@ package com.brandonhogan.weathertracker.ui.views;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -19,13 +18,15 @@ import com.bluelinelabs.conductor.RouterTransaction;
 import com.brandonhogan.AppController;
 import com.brandonhogan.weathertracker.R;
 import com.brandonhogan.weathertracker.ui.contracts.MainActivityContract;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainActivityContract.View, BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements MainActivityContract.View, OnTabSelectListener {
 
     private static final String TAG = MainActivity.class.getName();
     private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Bind(R.id.controller_container)
     ViewGroup container;
+
+    @Bind(R.id.bottomBar)
+    BottomBar bottomBar;
 
     private Router router;
 
@@ -53,9 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
             router.setRoot(RouterTransaction.with(new HomeController()));
         }
 
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(this);
+        bottomBar.setOnTabSelectListener(this);
     }
 
     @Override
@@ -114,15 +116,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+    public void onTabSelected(@IdRes int tabId) {
+        switch (tabId) {
             case R.id.navigation_home:
                 router.setRoot(RouterTransaction.with(new HomeController()));
-                return true;
+                break;
             case R.id.navigation_about:
                 router.setRoot(RouterTransaction.with(new AboutController()));
-                return true;
+                break;
         }
-        return false;
     }
 }
