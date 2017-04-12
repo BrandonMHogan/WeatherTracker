@@ -30,7 +30,7 @@ public class CurrentlyResponse implements Parcelable {
     private Double precipIntensityError;
     @SerializedName("precipProbability")
     @Expose
-    private Integer precipProbability;
+    private Double precipProbability;
     @SerializedName("precipType")
     @Expose
     private String precipType;
@@ -113,11 +113,11 @@ public class CurrentlyResponse implements Parcelable {
         this.precipIntensityError = precipIntensityError;
     }
 
-    public Integer getPrecipProbability() {
+    public Double getPrecipProbability() {
         return precipProbability;
     }
 
-    public void setPrecipProbability(Integer precipProbability) {
+    public void setPrecipProbability(Double precipProbability) {
         this.precipProbability = precipProbability;
     }
 
@@ -241,7 +241,7 @@ public class CurrentlyResponse implements Parcelable {
     }
 
     public double getPrecipProbabilityPercent() {
-        return ((double) (precipProbability * 100));
+        return ((precipProbability * 100));
     }
 
     public double getHumidityPercent() {
@@ -256,7 +256,7 @@ public class CurrentlyResponse implements Parcelable {
         nearestStormDistance = in.readByte() == 0x00 ? null : in.readInt();
         precipIntensity = in.readByte() == 0x00 ? null : in.readDouble();
         precipIntensityError = in.readByte() == 0x00 ? null : in.readDouble();
-        precipProbability = in.readByte() == 0x00 ? null : in.readInt();
+        precipProbability = in.readByte() == 0x00 ? null : in.readDouble();
         precipType = in.readString();
         temperature = in.readByte() == 0x00 ? null : in.readDouble();
         apparentTemperature = in.readByte() == 0x00 ? null : in.readDouble();
@@ -307,7 +307,7 @@ public class CurrentlyResponse implements Parcelable {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeInt(precipProbability);
+            dest.writeDouble(precipProbability);
         }
         dest.writeString(precipType);
         if (temperature == null) {
