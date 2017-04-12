@@ -96,8 +96,10 @@ public class HomeController extends Controller implements HomeControllerContract
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                progressBar.setVisibility(View.VISIBLE);
-                presenter.onRefresh();
+                if(checkPermission()) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    presenter.onRefresh();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -127,16 +129,21 @@ public class HomeController extends Controller implements HomeControllerContract
         super.onAttach(view);
         presenter.setView(this);
 
+        if(checkPermission())
+            presenter.onAttach();
+    }
+
+    private boolean checkPermission() {
         if (getActivity() == null)
-            return;
+            return false;
 
         if ( ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
             this.requestPermissions(new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
                     MY_PERMISSION_ACCESS_COURSE_LOCATION);
+            return false;
         }
-        else {
-            presenter.onAttach();
-        }
+
+        return true;
     }
 
     @Override
