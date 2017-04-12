@@ -111,7 +111,7 @@ public class HomeControllerPresenter implements HomeControllerContract.Presenter
 
     // Makes the call to the forecast API
     private void getForecast(double latitude, double longitude) {
-        darkSkyAPI.getForecast((long)latitude, (long)longitude)
+        darkSkyAPI.getForecast(latitude, longitude)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DarkSkyResponse>() {
