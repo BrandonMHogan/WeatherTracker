@@ -17,5 +17,5 @@
     <string name="forecast_loaded">Forecast has been updated</string>
     <string name="forecast_failed">Failed to retrieve forecast. Please try again later.</string>
 
-    <string name="about_title">Weather Tracker is a demo application utilizing several modern libraries and design patterns.</string>
+    <string name="about_title">Weather Tracker is a demo application utilizing several modern libraries and design patterns. This demo utilizes DarkSky API\'s for accurate weather forecasts. It also uses the following libraries: \n\n Constraint Layout 1.0.2 \n Conductor \n RxJava 2 and RxAndroid 2 \n Dagger 2 \n Butterknife \n Retrofit 2</string>
 </resources>

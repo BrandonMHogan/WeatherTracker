@@ -33,7 +33,6 @@ public class HomeController extends Controller implements HomeControllerContract
 
     private static final String TAG = HomeController.class.getName();
     private static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1;
-    private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 2;
 
     @Inject
     HomeControllerContract.Presenter presenter;
